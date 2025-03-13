@@ -1,0 +1,104 @@
+---
+title: 프로젝트 아키텍쳐
+description: Clean architecture
+---
+
+## TL;DR
+
+해당 프로젝트는 클린 아키텍쳐를 최대한 따라서 구현하는 중
+현실에서는 완벽히 따라가기 힘들 수 있다는 것을 자각해야 함. 가용시간이 한정적이기 때문이지만, 언제나 염두에 두고 리팩토링할 시간이 있다면 계속해서 개선해나가는 것이 좋겠다.
+
+# 1. 클린 아키텍쳐란?
+
+![clean structure](/docs/clean-diagram.jpg)
+
+해당 다이어그램은 2012년에 구상된 것으로, 이를 통해서 현 nextjs project를 layer로 구분하고 있다.
+
+- Entities: 코어 비즈니스 로직 및 로직이 다루는 데이터를 말함. 여기서는 db/schema가 해당
+- Use cases: 위 엔티티의 데이터와 유저를 연결 짓는 비즈니스 로직. 윗단 엔티티와 아랫단 시스템에 영향을 미치지 말아야 한다.
+- interfaces: View 역할. nextjs의 page 및 components에 해당함
+- Controllers: 레이어 간 데이터를 교환하는 역할. 이 프로젝트의 actions에 해당함.
+- Presenters: View 역할. nextjs의 page 및 components에 해당함
+- Infrastructure: 외부 코드베이스나 서비스와 연결함. 이 프로젝트에서는 api(외부 api) lib(외부 라이브러리) 폴더, db(drizzle-orm), data-access(db 핸들링) 및 util쪽에 해당함.
+
+이에 대해서 현재 작업중인 nextjs 폴더의 구조는 다음과 같음.
+
+## 폴더 스트럭쳐
+
+원칙은 다음과 같음
+
+- 재사용되는 컴포넌트는 src/components에 되지 않는다면 사용되는 src/app 내부의 페이지 안에서만 사용함.
+- 서드 파티 라이브러리를 사용하는 코드는 한 파일, 한 폴더 안에서 구현한다. 그 이유는 해당 라이브러리를 걷어낼 때를 대비하기 위함.
+-
+
+```
+${project-root}\src
+├─app
+│  ├─(docs)
+│  │  └─docs
+│  │      └─[[...slug]]
+│  ├─(hello)
+│  │  └─hello
+│  └─(main)
+│      ├─(auth)
+│      │  ├─reset-password
+│      │  ├─sign-in
+│      │  │  ├─email
+│      │  │  └─forgot-password
+│      │  └─sign-up
+│      ├─(coming-soon)
+│      ├─(landing)
+│      │  └─_sections
+│      ├─(legal)
+│      │  ├─privacy
+│      │  └─terms-of-service
+│      ├─actions
+│      ├─api
+│      │  └─status
+│      ├─dashboard
+│      │  ├─groups
+│      │  │  └─[groupId]
+│      │  │      ├─info
+│      │  │      └─settings
+│      │  └─settings
+│      │      ├─danger
+│      │      ├─profile
+│      │      └─security
+│      ├─signed-out
+│      ├─users
+│      │  └─[userId]
+│      │      └─info
+│      └─_header
+├─components
+│  └─ui
+├─data-access
+├─db
+├─emails
+├─hooks
+├─lib
+├─providers
+├─styles
+├─use-cases
+└─util
+```
+
+## app을 제외한 폴더구조
+
+- data-access: drizzle-orm이 핸들링하는 db와 비즈니스로직의 커뮤니케이션을 담당함.
+- use-cases: 비즈니스 로직. 넥스트js의 actions에서 해당 usecase 펑션을, usecase 펑션에서 data-access의 펑션을 부르는 식으로 사용함.
+- util: 헬퍼 펑션들.
+- emails: resend 및 이메일 관련 코드
+- db: drizzle 선언 및 스키마, 관련 커맨드들.
+
+## app 구조
+
+- (identifier)/url의 구조를 따름
+- page 단에서 server action이 필요할 경우 해당 위치에서 actions.ts를 생성해 사용함.
+- 액션에서는 zsa 라이브러리를 사용해 유저 데이터가 필요한 액션과 필요하지 않은 액션은 구분함.
+
+이거 나중에
+![clean structure](/docs/clean-architecture.png)
+
+### References
+
+https://newsletter.techworld-with-milan.com/p/what-is-clean-architecture

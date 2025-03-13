@@ -1,0 +1,266 @@
+---
+title: 컴포넌트 컨벤션
+description: Some Test Page
+---
+
+## TL;DR
+
+React.forwardRef와 radix-ui, tailwind-merge, class-variance-authority 라이브러리를 통해서 컴포넌트의 재사용성을 더욱 끌어올림
+
+1. ref는 optional한 값이기 때문에 서버 컴포넌트와 클라이언트 컴포넌트에 따라 나눠서 사용할 수 있음
+2. cva를 통해 기존 클래스를 쉽게 정의하고 tailwind-merge와 함께 부모에서 넘겨주는 것도 가능하다.
+
+## 1. 기존 컴포넌트
+
+```typescript
+
+import React from 'react';
+
+interface ButtonProps {
+    label: string;
+    onClick: () => void;
+    ...
+}
+
+const Button: React.FC<ButtonProps> = ({ label, onClick }) => {
+    return (
+        <button onClick={onClick} className="Tailwindcss classes">
+          {label}
+        </button>
+    )
+}
+
+export default Button;
+```
+
+기존에 컴포넌트를 작성하던 방식보다 더욱 확장성이 높은 방식을 확인할 수 있었다.
+
+## 2. 새로운 컴포넌트 컨벤션
+
+```typescript
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cn } from "@/lib/utils";
+import { cva, VariantProps } from "class-variance-authority";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default:
+          "text-white bg-slate-600 hover:bg-slate-600/80 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "hover:underline bg-white border border-black dark:bg-gray-300 dark:hover:bg-gray-300/80 dark:bg-secondary dark:text-secondary-foreground dark:hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
+Button.displayName = "Button";
+
+export { Button, buttonVariants };
+
+```
+
+상세는 아래와 같다.
+
+### 2-1. React.forwardRef
+
+forwardRef는 ref을 통해서 해당 컴포넌트의 엘리먼트 자체에 접근할 수 있게 하는 react api이다.
+
+아래 예시코드를 통해 children 컴포넌트에서 ref를 할당하고
+
+```typescript
+import { forwardRef } from 'react';
+
+const MyInput = forwardRef(function MyInput(props, ref) {
+  const { label, ...otherProps } = props;
+  return (
+    <label>
+      {label}
+      <input {...otherProps} ref={ref} /> // 👈🏽 the underlaying element
+    </label>
+  );
+});
+```
+
+아래를 통해 parent 컴포넌트에서 ref를 사용할 수 있게 한다.
+
+```typescript
+function Form() {
+  const ref = useRef(null);
+
+  function handleClick() {
+    ref.current.focus(); // 👈🏽 Accessing to that element using reference
+  }
+
+  return (
+    <form>
+      <MyInput label="Enter your name:" ref={ref} />
+      <button type="button" onClick={handleClick}>
+        Edit
+      </button>
+    </form>
+  );
+}
+```
+
+### 2-2. 실제 use-classes
+
+해당 forwardRef를 사용해서 구현하는 방법은 아래와 같다.
+
+먼저 아래와 같은 방식으로 ButtonRef외 추가할 props를 받을 수 있도록 타입을 정의한다.
+
+```typescript
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+// 실제 선언 syntax
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>
+...
+
+```
+
+여기서는 추가할 props로 class-variance-authority 라이브러리를 사용한 class variants를 추가하였다.
+
+```typescript
+const buttonVariants = cva(`default-style-classes`, {
+  variants: {
+    variant: {},
+    size: {},
+  },
+  defaultVariants: {},
+});
+```
+
+실제 사용된 variants는 다음과 같다.
+
+```typescript
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default:
+          "text-white bg-slate-600 hover:bg-slate-600/80 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "hover:underline bg-white border border-black dark:bg-gray-300 dark:hover:bg-gray-300/80 dark:bg-secondary dark:text-secondary-foreground dark:hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+```
+
+위의 variant, size 값을 parents에서 조정해서 다른 클래스를 적용하게 할 수 있다.
+
+```typescript
+// this helps us to merge tailwindCSS classes, you can save it in another file
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    // more code here
+  }
+);
+```
+
+위 코드를 나누어서 확인하면 다음과 같다.
+
+- Button: 해당 컴포넌트의 이름
+- React.forwardRef: 위 api를 사용해 부모에서 자식으로 ref를 전달할 수 있다.(필수는 아님)
+- HTMLButtonElement: 해당 컴포넌트가 리턴하는 엘리먼트.
+- ButtonProps: 해당 컴포넌트가 받는 props.
+
+```typescript
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+
+    const Comp = asChild ? Slot : 'button'
+    return <Comp ref={ref} className={cn(buttonVariants({ variant, size, className }))} {...props} />
+
+  },
+)
+
+Button.displayName = "Button";
+
+```
+
+- const Comp: radix-ui의 사용예로 asChild가 true라면 Radix-ui가 제공하는 Slot을 리턴한다., 아니라면 일반 button을 리턴한다.
+- displayName: 리액트 내부 코드에서 요구하는 컴포넌트의 displayName.
+
+마지막으로 실제 Button을 parents에서 사용한다.
+
+```typescript
+ <div className="flex justify-center">
+    <Button
+        asChild
+            variant="ghost"
+            className={cn(btnStyles, "w-full")}
+            >
+            <Link href="/sign-in/email">
+                <Mail /> Sign in with Email
+            </Link>
+     </Button>
+</div>
+```
+
+### References
+
+https://medium.com/@wdswy/how-to-build-highly-reusable-react-components-in-next-js-13-tailwindcss-and-radix-ui-a17cf5fbed99
+https://github.com/webdevcody/wdc-saas-starter-kit
