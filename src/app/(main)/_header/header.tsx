@@ -16,9 +16,11 @@ import {
 import { Settings2Icon } from "lucide-react";
 import { SignOutItem } from "./sign-out-item";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { testAction } from "./actions";
 
 export default async function Header() {
   const user = await getCurrentUser();
+  // const test = await testAction();
 
   return (
     <div className="px-5 md:px-6">
@@ -33,7 +35,7 @@ export default async function Header() {
               className="rounded-full"
             />
             <span className="text-sm md:text-base lg:text-2xl font-bold">
-              Placeholder app
+              AI Chatbot
             </span>
           </Link>
           <HeaderLinks isAuthenticated={!!user} />

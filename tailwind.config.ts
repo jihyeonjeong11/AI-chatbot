@@ -67,6 +67,7 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        messageSurface: "hsla(0,0%,91%,.5)",
       },
       borderRadius: {
         lg: "var(--radius)",

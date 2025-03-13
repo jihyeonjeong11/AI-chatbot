@@ -3,7 +3,7 @@ services:
   placeholder-starter:
     image: postgres
     restart: always
-    container_name: placeholder-starter
+    container_name: ai-chatbot
     ports:
       - 5432:5432
     environment:
