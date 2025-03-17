@@ -45,6 +45,7 @@ Day 1: Foundation & API Integration
 
    - added visual cue using streaming
    - change it into this template action form
+   - setback: need latest example with vercel ai sdk! clone vercel example first
 
 6. Basic Styling & UI Refinement (Evening):
    Add basic styling to improve the look and feel of the chat interface.
