@@ -18,16 +18,22 @@ import { btnIconStyles } from "@/styles/icons";
 import { CheckIcon } from "lucide-react";
 
 import { readStreamableValue } from "ai/rsc";
+import { useChat } from "@ai-sdk/react";
 
 export function ChatAreaSection() {
   const [conversation, setConversation] = useState<
     (Message & { id: number })[]
   >([]);
 
+  const { messages, input, handleInputChange, handleSubmit } = useChat({});
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       prompt: "",
+    },
+    values: {
+      prompt: input,
     },
   });
   return (
@@ -57,40 +63,7 @@ export function ChatAreaSection() {
 
       <div className="flex basis-[15%] text-base mx-auto px-3 md:px-4 w-full lg:px-4 xl:px-5">
         <Form {...form}>
-          <form
-            className="w-full"
-            onSubmit={form.handleSubmit(async (values) => {
-              form.reset();
-
-              setConversation([
-                ...conversation,
-                {
-                  role: "user",
-                  content: values.prompt,
-                  id: conversation.length,
-                },
-              ]);
-
-              const { messages, newMessage } = await continueConversation([
-                ...conversation,
-                { role: "user", content: values.prompt },
-              ]);
-
-              let textContent = "";
-
-              for await (const delta of readStreamableValue(newMessage)) {
-                textContent = `${textContent}${delta}`;
-                setConversation([
-                  ...messages.map((m, i) => ({ ...m, id: i })),
-                  {
-                    role: "assistant",
-                    content: textContent,
-                    id: messages.length,
-                  },
-                ]);
-              }
-            })}
-          >
+          <form className="w-full">
             <div className="mx-auto border-gray-500 border w-[80%] my-8 rounded-3xl px-4 py-6">
               <FormField
                 control={form.control}
@@ -101,8 +74,9 @@ export function ChatAreaSection() {
                       <input
                         className="w-full py-2 outline-none"
                         placeholder="Ask anything"
-                        value={field.value}
-                        onChange={(s) => field.onChange(s)}
+                        // value={field.value}
+                        // onChange={(s) => field.onChange(s)}
+                        onChange={(s) => handleInputChange(s)}
                       />
                     </FormControl>
                     <FormMessage />

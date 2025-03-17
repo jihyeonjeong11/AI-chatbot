@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^1.1.25",
+    "@ai-sdk/react": "^1.1.23",
     "@hookform/resolvers": "^3.9.1",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
