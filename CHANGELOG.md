@@ -25,20 +25,32 @@ Day 1: Foundation & API Integration
    A "Send" button.
    Basic styling to allow for readability.
 
+   - basic styling done
+
    Day 2: Enhancements & Basic Functionality
+
+   https://dev.to/ppaanngggg/how-to-use-google-gemini-for-nextjs-with-streaming-output-352g
 
 4. Conversation History Management (Morning):
    Implement logic to store and display the conversation history.
    Handle scrolling and display of longer conversations.
    If using a database, implement the code to store the history.
+
+   - postgres
+
 5. Error Handling & User Feedback (Afternoon):
    Implement basic error handling for API requests (e.g., network errors, API rate limits).
    Provide visual feedback to the user (e.g., loading indicators, error messages).
    Add a visual cue to show when the AI is "typing".
+
+   - added visual cue using streaming
+   - change it into this template action form
+
 6. Basic Styling & UI Refinement (Evening):
    Add basic styling to improve the look and feel of the chat interface.
    Ensure the UI is responsive to different screen sizes.
    Test cross browser compatibility.
+
    Day 3: Polishing & Deployment (If Possible)
 
 7. Input Sanitization & Security (Morning):
@@ -75,16 +87,19 @@ By focusing on these core features and prioritizing rapid development, we can de
    Message Bubbles: User and AI messages are displayed in separate bubbles.
    Typing Indicator: Sometimes appears when ChatGPT is processing a response.
    Buttons for Follow-ups: Quick reply suggestions may be available after responses.
+
 2. Input Section (Message Composer)
    Text Input Field: The area where users type messages.
    Send Button (Paper Plane Icon): Submits the message.
    Attachments (if available): Possible file upload options (not always present).
-   Regenerate Button: Allows users to regenerate a response.
+   Regenerate Button: Allows users to regenerate a response. // after get error response?
+
 3. Sidebar (Navigation & Controls)
    New Chat Button: Starts a fresh conversation.
    Conversation History: List of past chats for easy access.
    Settings Icon: Provides access to preferences like theme, account settings, and more.
    Upgrade to Pro (if applicable): Subscription or plan upgrade options.
+
 4. Header (Top Navigation)
    ChatGPT Logo: Branding and access to the home page.
    Account Menu: Profile settings, logout option.
