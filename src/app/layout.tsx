@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Placeholder App",
-  description: "Placeholder service for NextJS showcases",
+  title: "Gemini Chatbot",
+  description: "Gemini chatbot powered by Google and Vercel ai sdk",
   //openGraph:
 };
 

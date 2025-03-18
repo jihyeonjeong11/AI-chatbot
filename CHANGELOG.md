@@ -36,7 +36,7 @@ Day 1: Foundation & API Integration
    Handle scrolling and display of longer conversations.
    If using a database, implement the code to store the history.
 
-   - postgres
+   - no DB intergration for now. focus on ai sdk library itself first.
 
 5. Error Handling & User Feedback (Afternoon):
    Implement basic error handling for API requests (e.g., network errors, API rate limits).

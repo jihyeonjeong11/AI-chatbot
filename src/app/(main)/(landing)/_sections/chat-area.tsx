@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { continueConversation, Message } from "../actions";
 import { schema } from "../validation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,15 +15,12 @@ import { LoaderButton } from "@/components/loader-button";
 import { btnIconStyles } from "@/styles/icons";
 import { CheckIcon } from "lucide-react";
 
-import { readStreamableValue } from "ai/rsc";
 import { useChat } from "@ai-sdk/react";
 
 export function ChatAreaSection() {
-  const [conversation, setConversation] = useState<
-    (Message & { id: number })[]
-  >([]);
-
-  const { messages, input, handleInputChange, handleSubmit } = useChat({});
+  const { messages, input, handleInputChange, handleSubmit, status } = useChat(
+    {}
+  );
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -36,11 +31,12 @@ export function ChatAreaSection() {
       prompt: input,
     },
   });
+
   return (
     <div className="flex flex-1 justify-between grow basis-auto flex-col overflow-hidden w-full h-[calc(100vh-72px)]">
       <div className="flex flex-col basis-[85%] overflow-y-auto py-14">
         <div className="flex flex-col items-end  px-10">
-          {conversation.map((msg) => (
+          {messages.map((msg) => (
             <div
               key={msg.id}
               className={`flex w-full ${
@@ -63,20 +59,30 @@ export function ChatAreaSection() {
 
       <div className="flex basis-[15%] text-base mx-auto px-3 md:px-4 w-full lg:px-4 xl:px-5">
         <Form {...form}>
-          <form className="w-full">
+          <form className="w-full" onSubmit={handleSubmit}>
             <div className="mx-auto border-gray-500 border w-[80%] my-8 rounded-3xl px-4 py-6">
               <FormField
                 control={form.control}
                 name="prompt"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
                     <FormControl>
                       <input
                         className="w-full py-2 outline-none"
                         placeholder="Ask anything"
-                        // value={field.value}
-                        // onChange={(s) => field.onChange(s)}
+                        value={input}
                         onChange={(s) => handleInputChange(s)}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter" && !event.shiftKey) {
+                            event.preventDefault();
+
+                            if (status !== "ready") {
+                              //toast.error("Please wait for the model to finish its response!");
+                            } else {
+                              handleSubmit();
+                            }
+                          }
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -84,7 +90,7 @@ export function ChatAreaSection() {
                 )}
               />
               <div className="w-full justify-end flex">
-                <LoaderButton isLoading={false}>
+                <LoaderButton isLoading={status !== "ready"}>
                   <CheckIcon className={btnIconStyles} /> Submit
                 </LoaderButton>
               </div>

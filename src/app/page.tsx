@@ -1,4 +1,4 @@
-import { ChatAreaSection } from "./_sections/chat-area";
+import { ChatAreaSection } from "./(main)/(landing)/_sections/chat-area";
 
 export default function Home() {
   return (
