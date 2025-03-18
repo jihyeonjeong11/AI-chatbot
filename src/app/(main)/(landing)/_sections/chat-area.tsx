@@ -16,8 +16,13 @@ import { btnIconStyles } from "@/styles/icons";
 import { CheckIcon } from "lucide-react";
 
 import { useChat } from "@ai-sdk/react";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { PreviewMessage } from "./preview-message";
+import { Message } from "./message";
 
 export function ChatAreaSection() {
+  const { toast } = useToast();
   const { messages, input, handleInputChange, handleSubmit, status } = useChat(
     {}
   );
@@ -35,24 +40,10 @@ export function ChatAreaSection() {
   return (
     <div className="flex flex-1 justify-between grow basis-auto flex-col overflow-hidden w-full h-[calc(100vh-72px)]">
       <div className="flex flex-col basis-[85%] overflow-y-auto py-14">
-        <div className="flex flex-col items-end  px-10">
+        {messages.length === 0 && <PreviewMessage />}
+        <div className="flex flex-col items-center gap-4 px-10">
           {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex w-full ${
-                msg.role === "user" ? "justify-end" : "justify-start"
-              }`}
-            >
-              <div
-                className={`relative max-w-[75%] rounded-3xl px-5 py-2.5 my-3 ${
-                  msg.role === "assistant"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-700 text-white"
-                }`}
-              >
-                {msg.content}
-              </div>
-            </div>
+            <Message {...msg} />
           ))}
         </div>
       </div>
@@ -67,7 +58,7 @@ export function ChatAreaSection() {
                 render={() => (
                   <FormItem>
                     <FormControl>
-                      <input
+                      <Textarea
                         className="w-full py-2 outline-none"
                         placeholder="Ask anything"
                         value={input}
@@ -77,7 +68,12 @@ export function ChatAreaSection() {
                             event.preventDefault();
 
                             if (status !== "ready") {
-                              //toast.error("Please wait for the model to finish its response!");
+                              toast({
+                                title: "Something went wrong",
+                                description:
+                                  "Please wait for the model to finish its response!",
+                                variant: "destructive",
+                              });
                             } else {
                               handleSubmit();
                             }
@@ -89,7 +85,7 @@ export function ChatAreaSection() {
                   </FormItem>
                 )}
               />
-              <div className="w-full justify-end flex">
+              <div className="w-full justify-end flex py-2">
                 <LoaderButton isLoading={status !== "ready"}>
                   <CheckIcon className={btnIconStyles} /> Submit
                 </LoaderButton>
