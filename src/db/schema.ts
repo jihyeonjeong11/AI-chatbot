@@ -1,13 +1,16 @@
-import { relations } from "drizzle-orm";
+import { Message } from "ai";
+import { InferSelectModel, relations } from "drizzle-orm";
 import {
   boolean,
   index,
   integer,
+  json,
   pgEnum,
   pgTable,
   serial,
   text,
   timestamp,
+  uuid,
 } from "drizzle-orm/pg-core";
 
 export const roleEnum = pgEnum("role", ["member", "admin"]);
@@ -18,6 +21,19 @@ export const users = pgTable("gf_user", {
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
 });
+
+export const chat = pgTable("Chat", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  createdAt: timestamp("createdAt").notNull(),
+  messages: json("messages").notNull(),
+  userId: serial("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+});
+
+export type Chat = Omit<InferSelectModel<typeof chat>, "messages"> & {
+  messages: Array<Message>;
+};
 
 export const events = pgTable("gf_events", {
   id: serial("id").primaryKey(),
