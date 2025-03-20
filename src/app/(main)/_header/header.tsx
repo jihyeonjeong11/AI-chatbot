@@ -16,6 +16,8 @@ import { SignOutItem } from "./sign-out-item";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { HeaderLinks } from "./header-links";
 import { usePathname } from "next/navigation";
+import { History } from "../(landing)/_sections/history";
+import { getChatsByUserId } from "@/data-access/chats";
 
 export default async function Header() {
   const user = await getCurrentUser();
@@ -24,14 +26,8 @@ export default async function Header() {
     <div className="px-5 md:px-6">
       <div className="mx-auto flex w-full max-w-7xl py-4 justify-between">
         <div className="flex justify-between gap-10 items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/group.jpeg"
-              alt="Group Finder Logo"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
+          {user && <History user={user} />}
+          <Link href="/" className="flex items-center justify-center gap-2">
             <span className="text-sm md:text-base lg:text-2xl font-bold">
               Gemini Chatbot
             </span>

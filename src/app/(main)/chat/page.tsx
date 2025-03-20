@@ -10,7 +10,6 @@ export default async function ChatPage() {
   const chats = await getChatsByUserId({ id: user.id });
   return (
     <>
-      <History />
       <ChatAreaSection key={user.id} id={id} initialMessages={[]} />
     </>
   );

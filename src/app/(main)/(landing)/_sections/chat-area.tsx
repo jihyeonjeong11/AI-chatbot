@@ -32,15 +32,7 @@ export function ChatAreaSection({
 }) {
   const { toast } = useToast();
 
-  const {
-    messages,
-    input,
-    handleInputChange,
-    append,
-    status,
-    handleSubmit,
-    stop,
-  } = // handleSubmit,
+  const { messages, input, handleInputChange, status, handleSubmit, stop } =
     useChat({
       id: id.toString(),
       body: { id },
