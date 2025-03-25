@@ -11,6 +11,12 @@ import { getChatById } from "@/data-access/chats";
 import { assertAuthenticated } from "@/lib/session";
 import { Chat } from "@/db/schema";
 
+type ChatPageProps = {
+  params: {
+    id: string;
+  };
+};
+
 function convertToUIMessages(messages: Array<CoreMessage>): Array<Message> {
   return messages.reduce((chatMessages: Array<Message>, message) => {
     if (message.role === "tool") {
@@ -51,7 +57,7 @@ function convertToUIMessages(messages: Array<CoreMessage>): Array<Message> {
   }, []);
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: any) {
   const _ = await assertAuthenticated();
   const { id } = params;
   const chatFromDb = await getChatById({ id });

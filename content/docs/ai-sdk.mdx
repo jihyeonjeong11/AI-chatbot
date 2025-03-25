@@ -1,0 +1,38 @@
+---
+title: AI sdk 라이브러리 사용 예
+description: AI sdk 라이브러리 powered by Vercel
+---
+
+[출처 - 공식 사이트](https://sdk.vercel.ai/)
+[출처 - Vercel Gemini Chatbot template](https://github.com/vercel-labs/gemini-chatbot)
+[출처 - Vercel Chatbot template](https://github.com/vercel/ai-chatbot)
+
+## TL;DR
+
+Vercel에서 제공하는 해당 라이브러리를 통해 Typescript 환경에서 아주 간편하게 AI 제공자와 연결을 할 수 있다.
+
+# 1. AI sdk란?
+
+Vercel에서 제공하는 오픈 소스 AI 라이브러리. 모델에 따른 타입과 해당 모델과의 연결을 담당한다. 여기서는 구글에서 무료로 제공하는 Gemini api key를 사용하여 구현하였다.
+
+## 2. 기본 사용 예
+
+```
+import { generateText } from "ai"
+import { openai } from "@ai-sdk/openai"
+const { text } = await generateText({
+model: openai("o3-mini"),
+prompt: "What is love?"
+})
+```
+
+- Entities: 코어 비즈니스 로직 및 로직이 다루는 데이터를 말함. 여기서는 db/schema가 해당
+- Use cases: 위 엔티티의 데이터와 유저를 연결 짓는 비즈니스 로직. 윗단 엔티티와 아랫단 시스템에 영향을 미치지 말아야 한다.
+- interfaces: View 역할. nextjs의 page 및 components에 해당함
+- Controllers: 레이어 간 데이터를 교환하는 역할. 이 프로젝트의 actions에 해당함.
+- Presenters: View 역할. nextjs의 page 및 components에 해당함
+- Infrastructure: 외부 코드베이스나 서비스와 연결함. 이 프로젝트에서는 api(외부 api) lib(외부 라이브러리) 폴더, db(drizzle-orm), data-access(db 핸들링) 및 util쪽에 해당함.
+
+이에 대해서 현재 작업중인 nextjs 폴더의 구조는 다음과 같음.
+
+## 폴더 스트럭쳐

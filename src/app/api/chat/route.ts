@@ -21,13 +21,7 @@ export async function POST(request: Request) {
     onFinish: async (result) => {
       console.log(result.response.messages);
       if (user && user.id) {
-        console.log("if?");
         try {
-          console.log("hello", {
-            id,
-            messages: [...coreMessages, ...result.response.messages],
-            userId: user.id,
-          });
           await saveChat({
             id,
             messages: [...coreMessages, ...result.response.messages],

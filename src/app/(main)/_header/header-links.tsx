@@ -21,7 +21,7 @@ export function HeaderLinks({ isAuthenticated }: { isAuthenticated: boolean }) {
     <>
       {!isLandingPage && isAuthenticated && (
         <div className="hidden md:flex items-center gap-2">
-          <Button
+          {/* <Button
             variant={"link"}
             asChild
             className="flex items-center justify-center gap-2"
@@ -39,7 +39,7 @@ export function HeaderLinks({ isAuthenticated }: { isAuthenticated: boolean }) {
             <Link href={"/browse"}>
               <SearchIcon className="w-4 h-4" /> Browse Groups
             </Link>
-          </Button>
+          </Button> */}
 
           <Button
             variant={"link"}
@@ -53,7 +53,7 @@ export function HeaderLinks({ isAuthenticated }: { isAuthenticated: boolean }) {
         </div>
       )}
 
-      {(isLandingPage || !isAuthenticated) && (
+      {/* {(isLandingPage || !isAuthenticated) && (
         <div className="hidden md:flex gap-4">
           <Button variant={"link"} asChild>
             <Link href="/#features">Features</Link>
@@ -67,7 +67,7 @@ export function HeaderLinks({ isAuthenticated }: { isAuthenticated: boolean }) {
             <Link href={"/browse"}>Browse Groups</Link>
           </Button>
         </div>
-      )}
+      )} */}
     </>
   );
 }

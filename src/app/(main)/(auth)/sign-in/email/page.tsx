@@ -110,7 +110,12 @@ export default function EmailPage() {
             </Alert>
           )}
 
-          <LoaderButton isLoading={isPending} className="w-full" type="submit">
+          <LoaderButton
+            isLoading={isPending}
+            className="w-full"
+            type="submit"
+            data-testid="email-signin-button"
+          >
             Sign In
           </LoaderButton>
         </form>
@@ -132,7 +137,11 @@ export default function EmailPage() {
         </div>
       </div>
 
-      <Button className="w-full" variant={"secondary"}>
+      <Button
+        className="w-full"
+        variant={"secondary"}
+        data-testid="register-button"
+      >
         <Link href="/sign-up">Create an account</Link>
       </Button>
     </div>

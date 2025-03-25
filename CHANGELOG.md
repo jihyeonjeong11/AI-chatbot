@@ -57,14 +57,22 @@ Day 1: Foundation & API Integration
 7. Input Sanitization & Security (Morning):
    Sanitize user input to prevent potential security vulnerabilities (e.g., cross-site scripting).
    Ensure that API keys are not exposed in the frontend code.
+
+   - ??
+
 8. Basic Context Management (Afternoon):
    Implement a simple mechanism to pass the conversation history to the Gemini API to maintain context.
    This may be as simple as sending the last few messages in the request.
+
+   -using postgres
+
 9. Testing & Deployment (Evening):
    Perform thorough testing to identify and fix any remaining bugs.
    If time permits, deploy the chatbot to a platform like Vercel or Netlify for easy access.
    If deployment is not possible, prepare a demo to show the functionality.
    Key Considerations:
+
+   -use vercel
 
 Scope Reduction: Focus on core functionality. Avoid unnecessary features.
 Rapid Development: Prioritize speed over perfect code.

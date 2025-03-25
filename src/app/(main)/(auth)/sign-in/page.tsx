@@ -48,7 +48,7 @@ export default function SignInPage() {
                 variant="ghost"
                 className={cn(btnStyles, "w-full")}
               >
-                <Link href="/sign-in/email">
+                <Link href="/sign-in/email" data-testid="signin-button-email">
                   <Mail /> Sign in with Email
                 </Link>
               </Button>

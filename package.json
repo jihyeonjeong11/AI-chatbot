@@ -15,7 +15,8 @@
     "db:seed": "tsx ./src/db/seed.ts",
     "db:reset": "npm run db:clear && npm run db:migrate && npm run db:seed",
     "postinstall": "fumadocs-mdx",
-    "powershell:getTree": "Get-ChildItem -Recurse -Directory -Exclude *node_modules*"
+    "powershell:getTree": "Get-ChildItem -Recurse -Directory -Exclude *node_modules*",
+    "test": "pnpm exec playwright test --workers=4 --trace"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.1.25",
@@ -47,6 +48,7 @@
     "ai": "^4.1.61",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "drizzle-kit": "^0.30.1",
     "drizzle-orm": "^0.38.3",
@@ -83,6 +85,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.51.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -45,6 +45,11 @@ export default function RegisterPage() {
         variant: "destructive",
       });
     },
+    onSuccess() {
+      toast({
+        title: "Success!",
+      });
+    },
   });
 
   const form = useForm<z.infer<typeof registrationSchema>>({
@@ -131,7 +136,12 @@ export default function RegisterPage() {
             </Alert>
           )}
 
-          <LoaderButton isLoading={isPending} className="w-full" type="submit">
+          <LoaderButton
+            isLoading={isPending}
+            className="w-full"
+            type="submit"
+            data-testid="register"
+          >
             Register
           </LoaderButton>
         </form>

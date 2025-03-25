@@ -12,7 +12,6 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { LoaderButton } from "@/components/loader-button";
 import { btnIconStyles } from "@/styles/icons";
 import { CheckIcon } from "lucide-react";
 
@@ -22,6 +21,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { PreviewMessage } from "./preview-message";
 import { Message as MessageCard } from "./message";
 import { useScrollToBottom } from "@/hooks/use-scroll-bottom";
+import { Button } from "@/components/ui/button";
 
 export function ChatAreaSection({
   id,
@@ -83,7 +83,17 @@ export function ChatAreaSection({
 
         <div className="flex flex-row gap-2 relative items-end w-full md:max-w-[500px] max-w-[calc(100dvw-32px) px-4 md:px-0">
           <Form {...form}>
-            <form className="w-full" onSubmit={handleSubmit}>
+            <form
+              className="w-full"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (status === "ready") {
+                  handleSubmit();
+                } else {
+                  stop();
+                }
+              }}
+            >
               <div className="mx-auto border-gray-500 border my-8 rounded-3xl px-4 py-6">
                 <FormField
                   control={form.control}
@@ -92,6 +102,7 @@ export function ChatAreaSection({
                     <FormItem>
                       <FormControl>
                         <Textarea
+                          data-testid="prompt-area"
                           className="w-full py-2 outline-none"
                           placeholder="Ask anything"
                           value={input}
@@ -119,9 +130,10 @@ export function ChatAreaSection({
                   )}
                 />
                 <div className="w-full justify-end flex py-2">
-                  <LoaderButton isLoading={status !== "ready"}>
-                    <CheckIcon className={btnIconStyles} /> Submit
-                  </LoaderButton>
+                  <Button data-testid="submit-button">
+                    <CheckIcon className={btnIconStyles} />{" "}
+                    {status === "ready" ? "Submit" : "Stop"}
+                  </Button>
                 </div>
               </div>
             </form>

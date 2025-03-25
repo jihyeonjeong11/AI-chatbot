@@ -9,7 +9,6 @@ export default function MainLayout({
   return (
     <div className="flex flex-col w-full">
       <Header />
-
       <div>{children}</div>
     </div>
   );

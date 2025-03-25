@@ -15,9 +15,7 @@ import { Settings2Icon } from "lucide-react";
 import { SignOutItem } from "./sign-out-item";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { HeaderLinks } from "./header-links";
-import { usePathname } from "next/navigation";
 import { History } from "../(landing)/_sections/history";
-import { getChatsByUserId } from "@/data-access/chats";
 
 export default async function Header() {
   const user = await getCurrentUser();
@@ -78,7 +76,7 @@ async function HeaderActions() {
         </>
       ) : (
         <>
-          <Button asChild variant="secondary">
+          <Button data-testid={"sign-in-button"} asChild variant="secondary">
             <Link href="/sign-in">Sign In</Link>
           </Button>
         </>
