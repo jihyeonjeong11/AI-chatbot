@@ -16,7 +16,12 @@ export function Message({ content, role }: UIMessage) {
 
       <div className="flex flex-col gap-2 w-full">
         {content && typeof content === "string" && (
-          <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-4">
+          <div
+            data-testid={
+              role === "assistant" ? "assitant-message" : "user-message"
+            }
+            className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-4"
+          >
             <Markdown>{content}</Markdown>
           </div>
         )}

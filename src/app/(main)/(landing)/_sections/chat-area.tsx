@@ -130,7 +130,11 @@ export function ChatAreaSection({
                   )}
                 />
                 <div className="w-full justify-end flex py-2">
-                  <Button data-testid="submit-button">
+                  <Button
+                    data-testid={
+                      status === "ready" ? "submit-button" : "stop-button"
+                    }
+                  >
                     <CheckIcon className={btnIconStyles} />{" "}
                     {status === "ready" ? "Submit" : "Stop"}
                   </Button>

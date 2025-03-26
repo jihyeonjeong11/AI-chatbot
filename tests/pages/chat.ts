@@ -20,12 +20,12 @@ export class ChatPage {
   }
 
   async start() {
-    await this.page.goto("/chat");
+    await this.page.goto("http://localhost:3000");
   }
 
-  async sendUserMessage() {
+  async sendUserMessage(message: string) {
     await this.TextArea.click();
-    await this.TextArea.fill("random text");
+    await this.TextArea.fill(message);
     await this.SubmitButton.click();
   }
 
@@ -35,6 +35,12 @@ export class ChatPage {
     );
 
     await response.finished();
+  }
+
+  async hasChatIdInUrl() {
+    await expect(this.page).toHaveURL(
+      /^http:\/\/localhost:3000\/chat\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
+    );
   }
 
   //   async goToDocs() {
