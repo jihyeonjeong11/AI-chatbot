@@ -15,24 +15,115 @@ Vercel에서 제공하는 해당 라이브러리를 통해 Typescript 환경에�
 
 Vercel에서 제공하는 오픈 소스 AI 라이브러리. 모델에 따른 타입과 해당 모델과의 연결을 담당한다. 여기서는 구글에서 무료로 제공하는 Gemini api key를 사용하여 구현하였다.
 
-## 2. 기본 사용 예
+## 2. 기본 사용 예(NextJs app router)
 
+```typescript
+// app/api/chat/route.ts
+import { openai } from "@ai-sdk/openai";
+import { streamText } from "ai";
+
+// Allow streaming responses up to 30 seconds
+export const maxDuration = 30;
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  const result = streamText({
+    model: openai("gpt-4o"),
+    messages,
+  });
+
+  return result.toDataStreamResponse();
+}
 ```
-import { generateText } from "ai"
-import { openai } from "@ai-sdk/openai"
-const { text } = await generateText({
-model: openai("o3-mini"),
-prompt: "What is love?"
-})
+
+여기서는 docs 보다는 템플릿의 사용예를 따랐다.
+
+```typescript
+// 모델 정의
+import { google } from "@ai-sdk/google";
+import { LanguageModelV1Middleware, wrapLanguageModel } from "ai";
+
+const customMiddleware: LanguageModelV1Middleware = {}; // 미들웨어를 사용하기 위한 wrapper로 지금 특별한 미들웨어는 사용하고 있지 않음.
+
+export const geminiProModel = wrapLanguageModel({
+  model: google("gemini-1.5-pro-002"),
+  middleware: customMiddleware,
+});
+
+export const geminiFlashModel = wrapLanguageModel({
+  model: google("gemini-1.5-flash-002"),
+  middleware: customMiddleware,
+});
 ```
 
-- Entities: 코어 비즈니스 로직 및 로직이 다루는 데이터를 말함. 여기서는 db/schema가 해당
-- Use cases: 위 엔티티의 데이터와 유저를 연결 짓는 비즈니스 로직. 윗단 엔티티와 아랫단 시스템에 영향을 미치지 말아야 한다.
-- interfaces: View 역할. nextjs의 page 및 components에 해당함
-- Controllers: 레이어 간 데이터를 교환하는 역할. 이 프로젝트의 actions에 해당함.
-- Presenters: View 역할. nextjs의 page 및 components에 해당함
-- Infrastructure: 외부 코드베이스나 서비스와 연결함. 이 프로젝트에서는 api(외부 api) lib(외부 라이브러리) 폴더, db(drizzle-orm), data-access(db 핸들링) 및 util쪽에 해당함.
+```typescript
+// 서버 통신
+// src\app\api\chat\route.ts
+import { geminiProModel } from "@/ai";
+import { deleteChatById, getChatById, saveChat } from "@/data-access/chats";
+import { assertAuthenticated } from "@/lib/session";
+import { convertToCoreMessages, Message, streamText } from "ai";
 
-이에 대해서 현재 작업중인 nextjs 폴더의 구조는 다음과 같음.
+// Allow streaming responses up to 30 seconds
+export const maxDuration = 30;
 
-## 폴더 스트럭쳐
+export async function POST(request: Request) {
+  const user = await assertAuthenticated();
+  const { id, messages }: { id: string; messages: Array<Message> } =
+    await request.json();
+
+  const coreMessages = convertToCoreMessages(messages).filter(
+    (message) => message.content.length > 0
+  );
+
+  const r = await streamText({
+    model: geminiProModel,
+    messages: coreMessages,
+    onFinish: async (result) => {
+      if (user && user.id) {
+        try {
+          await saveChat({
+            id,
+            messages: [...coreMessages, ...result.response.messages],
+            userId: user.id,
+          });
+        } catch (error) {
+          console.error("Failed to save chat");
+        }
+      }
+    },
+    experimental_telemetry: {
+      // nextjs docs 참조 https://nextjs.org/docs/app/building-your-application/optimizing/open-telemetry
+      isEnabled: true,
+      functionId: "stream-text",
+    },
+  });
+
+  return r.toDataStreamResponse({});
+}
+```
+
+```typescript
+// 클라
+// src\app\(main)\(landing)\_sections\chat-area.tsx
+  import {useChat} from 'ai';
+  ...
+  const { messages, input, handleInputChange, status, handleSubmit, stop } = // form 관련 기능을 해당 sdk에서 제공함.
+    useChat({
+      id: id.toString(),
+      body: { id },
+      initialMessages,
+      maxSteps: 10,
+      onFinish: () => {
+        window.history.replaceState({}, "", `/chat/${id}`);
+      },
+      onError: () => {
+        toast({
+          title: "Something went wrong.",
+        });
+        stop();
+      },
+    });
+  ...
+```

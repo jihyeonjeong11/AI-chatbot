@@ -19,7 +19,6 @@ export async function POST(request: Request) {
     model: geminiProModel,
     messages: coreMessages,
     onFinish: async (result) => {
-      console.log(result.response.messages);
       if (user && user.id) {
         try {
           await saveChat({

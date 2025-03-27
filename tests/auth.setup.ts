@@ -11,7 +11,7 @@ const testPassword = generateId(16);
 
 // root -> /sign-in -> /sign-in/email
 
-setup("register", async ({ page }) => {
+setup("Authenticate", async ({ page }) => {
   await page.goto("http://localhost:3000/sign-in");
   await expect(page.getByText("Sign in with Email")).toBeVisible();
   await page.getByTestId("signin-button-email").click();

@@ -53,33 +53,16 @@ export default defineConfig({
       name: "setup:auth",
       testMatch: /auth.setup.ts/,
     },
-    // {
-    //   name: "setup:login",
-    //   testMatch: /login.setup.ts/,
-    // },
+
     {
       name: "chat",
       testMatch: /chat.test.ts/,
-      dependencies: [],
+      dependencies: ["setup:auth"],
       use: {
         ...devices["Desktop Chrome"],
         storageState: "playwright/.auth/session.json",
       },
     },
-    // {
-    //   name: 'chromium',
-    //   use: { ...devices['Desktop Chrome'] },
-    // },
-
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    // },
-
-    // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    // },
 
     /* Test against mobile viewports. */
     // {

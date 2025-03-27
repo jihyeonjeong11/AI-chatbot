@@ -42,8 +42,4 @@ export class ChatPage {
       /^http:\/\/localhost:3000\/chat\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
     );
   }
-
-  //   async goToDocs() {
-  //     await this.signInButton.click();
-  //   }
 }
