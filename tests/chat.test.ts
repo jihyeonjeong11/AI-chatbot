@@ -9,30 +9,29 @@ test.describe("Renders chat page", () => {
     await page.waitForURL("/chat");
   });
 
-  test("Form working", async ({ page }) => {
-    await expect(page.getByPlaceholder("Ask anything")).toBeVisible();
+  test("Form working", async () => {
+    await expect(
+      chatPage.TextArea.getByPlaceholder("Ask anything") // check if this passes
+    ).toBeVisible();
   });
 
-  test("send a user message and receive response", async ({ page }) => {
+  test("send a user message and receive response", async () => {
     await chatPage.sendUserMessage("hello");
     await chatPage.isGenerationComplete();
-    const assistantMessage = await page.getByTestId("assitant-message");
-    expect(assistantMessage).toBeVisible();
+    expect(chatPage.AssistantMessage).toBeVisible();
   });
 
-  test("redirect to /chat/:id after submitting message", async ({ page }) => {
+  test("redirect to /chat/:id after submitting message", async () => {
     await chatPage.sendUserMessage("Why is grass green?");
     await chatPage.isGenerationComplete();
-    const assistantMessage = await page.getByTestId("assitant-message");
-    expect(assistantMessage).toBeVisible();
-
+    expect(chatPage.AssistantMessage).toBeVisible();
     await chatPage.hasChatIdInUrl();
   });
 
-  test("stop generation during submission", async ({ page }) => {
+  test("stop generation during submission", async () => {
     await chatPage.sendUserMessage("Why is grass green?");
-    await expect(page.getByTestId("stop-button")).toBeVisible();
-    await page.getByTestId("stop-button").click();
-    await expect(page.getByTestId("submit-button")).toBeVisible();
+    await expect(chatPage.StopButton).toBeVisible();
+    await chatPage.StopButton.click();
+    await expect(chatPage.SubmitButton).toBeVisible();
   });
 });

@@ -9,8 +9,8 @@ test.describe("Render landing page", () => {
     await landingPage.start();
   });
 
-  test("Should render header and signin button", async ({ page }) => {
-    await expect(page.getByTestId("sign-in-button")).toBeVisible();
+  test("Should render header and signin button", async () => {
+    await expect(landingPage.signInButton).toBeVisible();
   });
 
   test("Should render sign-in button", async ({ page }) => {

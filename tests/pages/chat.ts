@@ -19,6 +19,10 @@ export class ChatPage {
     return this.page.getByTestId("submit-button");
   }
 
+  public get AssistantMessage() {
+    return this.page.getByTestId("assitant-message");
+  }
+
   async start() {
     await this.page.goto("http://localhost:3000");
   }
