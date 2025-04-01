@@ -11,12 +11,6 @@ import { getChatById } from "@/data-access/chats";
 import { assertAuthenticated } from "@/lib/session";
 import { Chat } from "@/db/schema";
 
-type ChatPageProps = {
-  params: {
-    id: string;
-  };
-};
-
 function convertToUIMessages(messages: Array<CoreMessage>): Array<Message> {
   return messages.reduce((chatMessages: Array<Message>, message) => {
     if (message.role === "tool") {
