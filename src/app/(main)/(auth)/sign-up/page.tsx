@@ -16,7 +16,6 @@ import {
 import { pageTitleStyles } from "@/styles/common";
 import { cn } from "@/lib/utils";
 import { useServerAction } from "zsa-react";
-//import { signUpAction } from "./actions";
 import { LoaderButton } from "@/components/loader-button";
 import { useToast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
