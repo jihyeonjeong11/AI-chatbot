@@ -21,6 +21,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Gemini Chatbot",
   description: "Gemini chatbot powered by Google and Vercel ai sdk",
+  verification: {
+    google: "cqzY-5WngFKXz62gUJnYeM3jE6XGoQzRSs-jYEeIsHs",
+  },
   //openGraph:
 };
 
