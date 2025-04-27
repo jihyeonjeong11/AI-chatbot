@@ -40,6 +40,17 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+  robots: {
+    index: true,
+    follow: true,
+    "max-image-preview": "large",
+    "max-snippet": -1,
+    "max-video-preview": -1,
+    googleBot: "index, follow",
+  },
+  verification: {
+    google: "cqzY-5WngFKXz62gUJnYeM3jE6XGoQzRSs-jYEeIsHs",
+  },
   themeColor: "hsl(222.2 47.4% 11.2%)",
   openGraph: {
     url: "https://ai-gemini-chatbot-pearl.vercel.app/",
