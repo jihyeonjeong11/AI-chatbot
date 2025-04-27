@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     images: [
       // need this.
       {
-        url: "/public/AIBuilds.jpg",
+        url: "/AIBuilds.jpg",
         type: "image/png",
         width: 1920,
         height: 1080,
