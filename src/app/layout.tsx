@@ -18,11 +18,51 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// export const metadata: Metadata = {
+//   title: "Gemini Chatbot",
+//   description: "Gemini chatbot powered by Google and Vercel ai sdk",
+//   keywords: "Gemini, chatbot, Google, Vercel, ai, sdk",
+//   authors: [{ name: "JIHYEON JEONG", url: "https://jihyeonjeong.com" }],
+//   creator: "JIHYEON JEONG",
+//   icons: {
+//     icon: "/favicon.ico",
+//   },
+
+//   //openGraph:
+// };
+
 export const metadata: Metadata = {
   title: "Gemini Chatbot",
   description: "Gemini chatbot powered by Google and Vercel ai sdk",
-
-  //openGraph:
+  keywords: "Gemini, chatbot, Google, Vercel, ai, sdk",
+  authors: [{ name: "JIHYEON JEONG", url: "https://jihyeonjeong.com" }],
+  creator: "JIHYEON JEONG",
+  icons: {
+    icon: "/favicon.ico",
+  },
+  themeColor: "hsl(222.2 47.4% 11.2%)",
+  openGraph: {
+    url: "https://ai-gemini-chatbot-pearl.vercel.app/",
+    title: "Gemini Chatbot",
+    type: "website",
+    locale: "en_US",
+    description: "Gemini chatbot powered by Google and Vercel ai sdk",
+    images: [
+      // need this.
+      {
+        url: "/public/AIBuilds.jpg",
+        type: "image/png",
+        width: 1920,
+        height: 1080,
+        alt: "Two AI Bot building walls.",
+      },
+    ],
+    siteName: "Gemini Chatbot",
+  },
+  twitter: {
+    card: "summary",
+    creator: "JIHYEONJEONG",
+  },
 };
 
 export default function RootLayout({
