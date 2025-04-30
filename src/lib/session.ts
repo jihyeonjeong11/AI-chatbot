@@ -8,6 +8,8 @@ import { cache } from "react";
 
 const SESSION_COOKIE_NAME = "session";
 
+// https://www.reddit.com/r/nextjs/comments/1flih2p/setting_cookie_in_server_action_gives_me_error/
+
 export async function setSessionTokenCookie(
   token: string,
   expiresAt: Date
@@ -41,7 +43,8 @@ export const getCurrentUser = cache(async () => {
 export async function setSession(userId: UserId) {
   const token = generateSessionToken();
   const session = await createSession(token, userId);
-  setSessionTokenCookie(token, session.expiresAt);
+  return { token, expiresAt: session.expiresAt };
+  // setSessionTokenCookie(token, session.expiresAt);
 }
 
 export async function getSessionToken(): Promise<string | undefined> {

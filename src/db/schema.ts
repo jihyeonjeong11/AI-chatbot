@@ -31,10 +31,6 @@ export const chat = pgTable("Chat", {
     .references(() => users.id, { onDelete: "cascade" }),
 });
 
-export type Chat = Omit<InferSelectModel<typeof chat>, "messages"> & {
-  messages: Array<Message>;
-};
-
 export const events = pgTable("gf_events", {
   id: serial("id").primaryKey(),
   groupId: serial("groupId")
@@ -237,3 +233,7 @@ export type Session = typeof sessions.$inferSelect;
 
 export type GroupId = Group["id"];
 export type Event = typeof events.$inferSelect;
+
+export type Chat = Omit<InferSelectModel<typeof chat>, "messages"> & {
+  messages: Array<Message>;
+};

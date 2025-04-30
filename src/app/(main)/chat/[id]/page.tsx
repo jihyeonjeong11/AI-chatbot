@@ -10,6 +10,8 @@ import { ChatAreaSection } from "../../(landing)/_sections/chat-area";
 import { getChatById } from "@/data-access/chats";
 import { assertAuthenticated } from "@/lib/session";
 import { Chat } from "@/db/schema";
+import { Metadata } from "next";
+import { getTitleFromChat } from "../../(landing)/_sections/history";
 
 function convertToUIMessages(messages: Array<CoreMessage>): Array<Message> {
   return messages.reduce((chatMessages: Array<Message>, message) => {
@@ -49,6 +51,36 @@ function convertToUIMessages(messages: Array<CoreMessage>): Array<Message> {
 
     return chatMessages;
   }, []);
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const { id } = params;
+  const chatFromDb = await getChatById({ id });
+
+  if (!chatFromDb) {
+    notFound();
+  }
+  const title = getTitleFromChat(chatFromDb);
+
+  return {
+    title: `Chat with AI - ${title}`,
+    description: "Access your personal AI chat session",
+    openGraph: {
+      title: `Chat with AI - ${id}`,
+      description: "Access your personal AI chat session",
+      url: `https://yourdomain.com/chat`,
+      type: "website",
+      // You can add dynamic images or other OG data here.
+    },
+    twitter: {
+      card: "summary",
+      title: `Chat with AI - ${title}`,
+    },
+  };
 }
 
 export default async function Page({ params }: any) {

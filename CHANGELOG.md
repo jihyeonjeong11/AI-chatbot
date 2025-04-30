@@ -118,3 +118,13 @@ By focusing on these core features and prioritizing rapid development, we can de
    Multimodal Capabilities (if enabled): Support for images, code execution, or web browsing.
    Canvas Mode (for documents/code): A separate window for editing or drafting content.
    Plugin/Tool Selection (if applicable): Options to enable browsing, code execution, or DALL·E image generation.
+
+2025/04/30
+
+- changed setSession
+- moved setCookie into server action the error "Cookies can only be modified in a Server Action or Route Handler"
+
+- needs time to check?
+- Gotta fix signup as well, if the fix works
+
+[reddit ref](https://www.reddit.com/r/nextjs/comments/1flih2p/setting_cookie_in_server_action_gives_me_error/)
